@@ -12,7 +12,7 @@ import Login from './Pages/Login/Login';
 
 function App() {
   return (
-    <div className="App">
+    <div className='px-12'>
       
       <Navbar/>
       <Routes>
