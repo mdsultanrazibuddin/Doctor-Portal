@@ -1,8 +1,16 @@
 import React from 'react';
 import { format } from 'date-fns';
+import auth from '../firebase.init';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import Loading from '../Shared/Loading';
 
 const BookingModal = ({treatment,date, setTreatment}) => {
     const {_id,name, slots} = treatment;
+    const [user, loading] = useAuthState(auth);
+    
+    if(loading){
+        return <Loading/>
+    }
 
     const handleBooking = event =>{
         event.preventDefault();
@@ -21,12 +29,14 @@ const BookingModal = ({treatment,date, setTreatment}) => {
                            <input type="text" disabled value={format(date, 'PP')} class="input input-bordered w-full max-w-xs" />
                            <select name='slot' class="select select-bordered w-full max-w-xs">
                              {
-                                 slots.map(slot => <option value={slot}>{slot}</option>)
+                                 slots.map((slot, index) => <option 
+                                    key={index}
+                                    value={slot}>{slot}</option>)
                              }
                            
                             </select>
-                           <input type="text" name='name' placeholder="Your Name" class="input input-bordered w-full max-w-xs" />
-                           <input type="text" name='email' placeholder="Email Address" class="input input-bordered w-full max-w-xs" />
+                           <input type="text" name='name' disabled value={user?.displayName || ''} class="input input-bordered w-full max-w-xs" />
+                           <input type="text" name='email' disabled value={user?.email || ''} class="input input-bordered w-full max-w-xs" />
                            <input type="text" name='phone' placeholder="Phone Number" class="input input-bordered w-full max-w-xs" />
                            <input type="submit" value="Submit" class=" btn btn-secondary w-full max-w-xs" />
                         </form>
